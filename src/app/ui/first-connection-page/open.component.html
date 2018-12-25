@@ -1,0 +1,13 @@
+<mat-card class="br-20" *ngIf="auth.user | async as user" > 
+        <br>
+        <mat-card-content>
+            <p>
+                Congratulations you have been well recorded please reconnect in a few minutes. 
+            </p>
+        </mat-card-content>
+        
+        <mat-card-actions>
+                <button mat-raised-button (click)="logout()">OK</button>
+        </mat-card-actions>
+    
+    </mat-card>

@@ -1,0 +1,58 @@
+mat-card-title {
+	font-size: 2em !important;
+	padding-top: 10px;
+}
+
+
+.px-ttc {
+  padding-left: 10px;
+  display: block;
+  width: 80px;
+  font-weight: 700;
+  border-left: 1px dotted #ccc;
+}
+
+.statut {
+	clear: both;
+	background-color: #000;
+	color: #FFF;
+	font-size: 1em;
+	padding: 3px 10px;
+	text-transform: uppercase;
+	width: 60px;
+	display: inline-block;
+	text-align: center;
+	margin-right: 10px;
+}
+
+
+.waiting-statut { background-color: #FF2C00; }
+.ongoing-statut { background-color: #00B945; }
+.fillcart-statut { background-color: #D9005B; }
+.billing-statut { background-color: #FF8500; }
+.paid-statut { background-color: black }
+
+
+.waiting-icon { color: #FF2C00; }
+.ongoing-icon { color: #00B945; }
+.fillcart-icon { color: #D9005B; }
+.billing-icon { color: #FF8500; }
+.paid-icon { color: black }
+
+.datetime {
+	font-weight: 700;
+	width: 130px;
+	display: inline-block;
+}
+.cliente {
+	padding: 5px 10px;
+	border-left: 1px dotted #ccc;
+	background-color: #eee;
+	text-transform: uppercase;
+	cursor: pointer;
+	border-radius: 2px;
+}
+.cliente:hover {
+	background-color: #666;
+	color: #fff;
+}

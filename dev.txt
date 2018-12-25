@@ -1,0 +1,181 @@
+DEPLOY 
+1- firebase init
+2- ng build --prod
+3- firebase deploy
+
+
+04/08/2018
+
+- Priorité 1 : Lors de l'attribution d'une venue à un event, le moteur autocomplete ne sort les résultats que des venue dont le nom est exactement comme le mot saisi dans la recherche; Il faudrait qu'il sorte également les venues dont le mot saisi dans la recherche peut être à la fin ou au milieu du nom de la venue. (event-venue l.45)
+				OK
+- Priorité 2 : Outil de recherche (artiste(latsname || firstname) || event(titre || venuename)) OK(probleme sur venue)
+
+- Priorité 3 : Lors de l'attribution d'une composition existante dans un programme d'event, changer le menu list par un autocomplete qui ne tient pas compte de la place du mot saisie pour la recherche dans le résultat.
+				OK
+- Priorité 4 :  Script de Back Up Firestore
+	1- Programmer le lancement d'une fonction tous les jours
+	2- Créer un fichier et écrire dedans
+	3- Uploader le fichier sur Firesbase Storage
+	4- Uploader le fichier un serveur distant
+	5- Dans le module importexport, ecrire dans un fichier txt le résultat du bouton Export Data (c'est à dire toutes les collections du firestore)
+	json-server --watch src/data/20180726-FS.json --port 4000
+	
+- Modifier les dates des saisons
+			Season18-19
+			Sept-Dec 2018 
+			Jan-Apr 2019
+			May-Aug 2019
+			Season 19-20
+- Dans la dialog Filtre des Events (/events) trouver une solution pour mettre le clique sur toutes la case des artistes plutot que sur le bouton.
+- Securiser toutes les images
+- Finaliser Module News avec le module d'upload
+- Update News Home page
+- 'medias' mieux que 'media' dans la sous collection de members
+- Fonctionnalité de multi intrument pour un artiste
+- Fonction dupliquer
+- A la création d'un event, lors de la première étape affilier directement l'event à un artiste. A voir si on aura besoin de créer des events sans artiste.
+- infinite scroll sur la grille des events
+- liste des composers par ordre alphabétique
+- Œuvre ajoutée pas classées à l’alphabétique
+- idem salle de concert
+- parfois il ne prend pas les ajouts oeuvres en direct sur la fiche concert
+
+
+
+
+
+
+
+
+
+- .orderBy('lastname') dans la grille des artistes
+OK
+- History titre en bleux
+C- OK
+- Module d'authentification
+F- OK
+
+
+
+11/07/2018
+
+F- Atteindre les sous collections dans une liste (*ngFor): component Composers: afficher le nombre de compositions par compositeur
+F- Filtrage News par requête
+F- Filtrage Events par requête
+
+
+DONE - C - Update Event Field in Artist Sub Collection
+DONE - C - Fonction d'export des collection en json
+C- Format Date à l'insertion d'un article de presse
+C- Fonction Import d'un Json en Collections
+Update - Export/Import Node Press et Media
+DONE - C - Fonction Export de toutes les collections
+C- Rassembler toutes les fonctions d'imports dans un service du module importexport/shared
+DONE - C - Import Events in CSV
+
+
+
+
+
+- Publish Event
+
+
+
+
+
+
+REQUÊTES:
+
+NEWS
+- Sélection des news présent sur la home page dans le carousel supérieur
+- Sélection des news présent sur la home page dans les news de la partie infèrieur
+- Sélection des news liées à un artiste
+
+ARTISTE
+- Sélection des artistes
+- Sélection des artistes publié sur le site
+- Sélection des artiste par instrument
+
+EVENT
+- Sélection des events d'un artiste
+- Sélection des events d'un artiste publié sur le site (statue = Online)
+- Sélection des events d'un artiste appartenant à une tournée
+- Sélection des events d'un artiste ayant le statut "touring"
+- Sélection de tous les events ayant eu lieu dans un lieu (venue)
+- Sélection des events par type (ballet,chamber music,concerto,opera staged,opera ...)
+- Sélection des events sur un champs (netto fee || brutto fee || origine)
+- Sélection des events sur deux champs (netto fee && origine)
+- Sélection des events compris entre uen date de début et une date de fin
+
+
+
+
+
+
+- Bouton de suppression des images dans news-details
+- Chronologie des articles de presse
+- Direction à la place d chef d'orchestre
+
+
+DROPBOX ARTISTE:
+
+AURELIEN PASCAL
+https://www.dropbox.com/sh/tt43uqvgt63oeti/AABoCRf-q9bhOEgqjiO_iUfIa?dl=0
+
+GENEVIÈVE STROSSER
+https://www.dropbox.com/sh/4m1mf5di9r455sd/AAAAZNKkbVWXpyteRNzd6CkFa?dl=0
+
+Haochen Zang
+https://www.dropbox.com/sh/212mwmz1akycxsn/AADYWDxSREw2-y1-KvvNxgLha?dl=0
+
+EDUSEI
+https://www.dropbox.com/sh/cdcixahbep39nmd/AAANXnR09lP3uZrUXpNxsKFZa?dl=0
+
+Munich Herkulessaal John Kevin Edusei and Munich Symphony Orchestra play Mahler 5th Symphony and Ullman Piano Concerto with Danae Dörken.
+
+
+NEWS
+
+Munich Prinzregententheater John Kevin Edusei and Munich Symphony Orchestra play Brahms Symphony 2nd, Schumann Violin Concerto with the young violinist Stephen Waarts.
+
+
+Last CD released in November 2017 Schubert symphonies 4th ad 7th with John Kevin Edusei and Munich Symphony Orchestra.
+
+Aurélien Pascal
+A découvrir chez SONY Classical  le rare concerto pour violoncelle de Franz Danzi par le jeune violoncelliste
+
+
+Ayana Tsuji
+
+April 2018
+Releasing of the first CD, Live in Montreal, of the new exclusive Warner Classics artist.
+Prendre la photo dans discographie pochette rose
+
+Kevin John Edusei
+
+June 2018
+Kevin John Edusei  conducts Kátja Kabanová by Leoš Janáček at the Konzert Theater Bern
+
+June 2018
+Don’t miss Cello Concerto No. 2 by Victor Herbert  with Maximilian Hornung in Kempten 
+
+Summer Festivals 2018
+Kevin John Edusei brings The Magic Flute to Hamburg with Münchner Symphoniker
+
+
+
+
+
+LINKS COMPETITOR
+
+https://www.askonasholt.co.uk/artists/lars-vogt/
+https://www.harrisonparrott.com/artists
+http://www.kdschmid.de/artistdetail/items/alain-altinoglu.html
+
+2018 04 11
+BUG
+
+- Edition d'un membre non artiste crée un instrument vide dans le neoud "instrument"
+
+json-server --watch src/data/20180726-FS.json --port 4000
+

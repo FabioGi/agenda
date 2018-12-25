@@ -1,0 +1,150 @@
+<div *ngIf="auth.user | async as user" >
+
+		<ng-template #loading>				
+				<br><br>
+				<mat-spinner color="warn"></mat-spinner>
+				<br><br>
+			</ng-template>
+			
+			<!-- <mat-card *ngIf="dev"> -->
+			<mat-card *ngIf="events$ | async; let events; else loading" class="calendar-card">
+				<mat-card-content>
+					<!-- for admin and client -->
+					<table cellspacing="0" class="cal-table" *ngIf="user.role !== 'agent'" >
+						<tr>
+							<td class="cal-cell-today bg-black">
+								<mat-icon (click)="getToday()">today</mat-icon>
+							</td>
+							<td [colSpan]="(members | async)?.length" class="td-date">
+							  <!-- <mat-icon *ngIf="today !== calendarDate"  (click)="changeDay(calendarDate,'-7')">fast_rewind</mat-icon>
+							  <mat-icon *ngIf="today !== calendarDate" (click)="changeDay(calendarDate,'-1')">keyboard_arrow_left</mat-icon> -->
+							  <span class="showdate"> {{calendarDate | date:'EEEE d MMM'}}</span>
+							  <mat-icon (click)="changeDay(calendarDate,'1')">keyboard_arrow_right</mat-icon>
+							  <mat-icon (click)="changeDay(calendarDate,'7')">fast_forward</mat-icon>
+							</td>
+						</tr>  
+						<tr>
+							<td class="cal-cell-people bg-black" routerLink="./../members">
+								<mat-icon>people</mat-icon>
+							</td>
+							<td class="cal-cell-name" 
+								*ngFor="let member of members | async"
+								[routerLink]="['./../member', member.$key]">
+								{{ member.firstname}}
+							</td>
+						</tr>
+						<tr *ngFor="let time of times">
+							<td class="cal-cell-hour">{{ time }}</td>
+							<td class="cal-cell nopad-nocell" 
+								*ngFor="let member of members | async"
+								(click)="openDialogNewEvent(calendarDate,time,member)" disabled>
+									<div class="rdv" *ngFor="let event of events">
+											<!-- EVENT EN COURS (Statut : waiting, ongoing) -->
+											<span 
+											[ngClass]="
+											{
+												
+												'ongoing-event':event.statut=='ongoing',
+												'fillcart-event':event.statut=='filled',
+												'billing-event':event.statut=='billing',
+												'paid-event':event.statut=='paid',
+												'round-top-event':event.firstofmulti=='1',
+												'round-bottom-event':event.lastofmulti=='1',
+												'unaivailable-event':event.clientfullname == 'Indisponible Indisponible' && event.statut=='waiting',
+												'waiting-event':event.clientfullname !== 'Indisponible Indisponible' && event.statut=='waiting'
+											}"
+											 *ngIf="
+												 event.memberfirstname===member.firstname
+												 &&
+												 event.time===time
+												 &&
+												 event.tempsdepause=='0'"
+											(click)="openDialogSeeEvent($event,event)">
+												{{ 	
+													(event.clientfullname.length>15) ? 
+													(event.clientfullname | slice:0:15)+'...':(event.clientfullname) 
+												}}									
+											</span>
+									</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="cal-cell-list bg-black">
+								<mat-icon routerLink="./../carts">list</mat-icon>					
+							</td>
+							<td [colSpan]="(members | async)?.length" class="td-bottom">
+								
+							</td>
+						</tr>
+					</table>
+
+					<!-- for agent -->
+					<table cellspacing="0" class="cal-table" *ngIf="user.role == 'agent'"> 
+							<tr>
+								<td class="cal-cell-today bg-black">
+									<mat-icon (click)="getToday()">today</mat-icon>
+								</td>
+								<td [colSpan]="(members | async)?.length" class="td-date">
+								  <!-- <mat-icon *ngIf="today !== calendarDate"  (click)="changeDay(calendarDate,'-7')">fast_rewind</mat-icon>
+								  <mat-icon *ngIf="today !== calendarDate" (click)="changeDay(calendarDate,'-1')">keyboard_arrow_left</mat-icon> -->
+								  <span class="showdate"> {{calendarDate | date:'EEEE d MMM'}}</span>
+								  <mat-icon (click)="changeDay(calendarDate,'1')">keyboard_arrow_right</mat-icon>
+								  <mat-icon (click)="changeDay(calendarDate,'7')">fast_forward</mat-icon>
+								</td>
+							</tr>  
+							<tr>
+								<td class="cal-cell-people bg-black" routerLink="./../members">
+									<mat-icon>people</mat-icon>
+								</td>
+								<td class="cal-cell-name" 
+									[routerLink]="['./../member', user.memberkey]">
+									{{ user.firstname}}
+								</td>
+							</tr>
+							<tr *ngFor="let time of times">
+								<td class="cal-cell-hour">{{ time }}</td>
+								<td class="cal-cell nopad-nocell"   
+									(click)="openDialogNewEvent(calendarDate,time,user)">
+										<div class="rdv" *ngFor="let event of events">
+												<!-- EVENT EN COURS (Statut : waiting, ongoing) -->
+												<span 
+												[ngClass]="
+												{
+													'ongoing-event':event.statut=='ongoing',
+													'fillcart-event':event.statut=='filled',
+													'billing-event':event.statut=='billing',
+													'paid-event':event.statut=='paid',
+													'round-top-event':event.firstofmulti=='1',
+													'round-bottom-event':event.lastofmulti=='1',
+													'unaivailable-event':event.clientfullname == 'Indisponible Indisponible' && event.statut=='waiting',
+												    'waiting-event':event.clientfullname !== 'Indisponible Indisponible' && event.statut=='waiting'
+												}"
+												 *ngIf="
+													 event.memberfirstname===user.firstname
+													 &&
+													 event.time===time
+													 &&
+													 event.tempsdepause=='0' "
+												(click)="openDialogSeeEvent($event,event)">
+													{{ 	
+														(event.clientfullname.length>15) ? 
+														(event.clientfullname | slice:0:15)+'...':(event.clientfullname) 
+													}}									
+												</span>
+										</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="cal-cell-list bg-black">
+									<mat-icon routerLink="./../carts">list</mat-icon>					
+								</td>
+								<td [colSpan]="(members | async)?.length" class="td-bottom"> 
+									
+								</td>
+							</tr>
+						</table>
+				</mat-card-content>
+			
+			</mat-card>
+
+</div>

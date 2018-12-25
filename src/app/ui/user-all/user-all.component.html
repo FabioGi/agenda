@@ -1,0 +1,65 @@
+<!-- <pre>
+  {{users | async | json}}
+</pre> -->
+
+
+<!-- <pre>{{ members | async | json }}</pre>  -->
+
+<!-- <img src="https://firebasestorage.googleapis.com/v0/b/kajimotomusic-prod.appspot.com/o/uploads%2Flogo_kajimoto_yellow_blue_png_1523548360314.jpg?alt=media&token=a93f1f55-8d9e-438a-93ba-c2c8c4a50a2e" class="logo-bo"> -->
+
+<mat-card class="noshadow">
+	<mat-card-header>
+		<div mat-card-avatar class="example-header-image">
+			<mat-icon matListIcon>people</mat-icon>
+		</div>
+    <mat-card-title><strong>Davidlucas's hairdresser</strong> Users</mat-card-title>
+    
+		<button mat-fab routerLink="./../dashboard" color="black">
+			<mat-icon>dashboard</mat-icon>
+  	</button>
+	</mat-card-header>
+	<mat-card-content *ngIf="users | async; let users">
+		Users : {{ users.length }}
+		<mat-list dense>
+		  <mat-list-item 
+		  	*ngFor="let user of users; let i = index">
+		   <!-- [routerLink]="['./../member', member.$key]">  -->
+          <mat-icon matListIcon>person</mat-icon>
+          <p>
+            <img class="card-img-top" [src]="user.photoURL || 'https://api.adorable.io/avatars/109/fire.png'" width=50px>
+          </p>
+					<p matLine> 
+						<span><strong>{{user.displayName}}</strong></span><br>
+            <span>{{user.email}}</span><br>
+            <span><strong>{{user.role}}</strong></span>
+					</p>
+
+					<mat-radio-group class="office-radio" color="warn"  matLine
+						[(ngModel)]="user.role"
+						(ngModelChange)="updateField(user,user.role)">
+					  <mat-radio-button value="admin" color="warn">admin</mat-radio-button> 
+						<mat-radio-button value="public" color="warn">public</mat-radio-button>
+						<mat-radio-button value="agent" color="warn">agent</mat-radio-button>
+						<mat-radio-button value="prohibit" color="warn">prohibit</mat-radio-button>
+					</mat-radio-group>
+
+					<!-- <button mat-icon-button
+						[routerLink]="['./../member', user.$key]">
+		        <mat-icon>info</mat-icon>
+		     	</button>
+					
+			
+				<button mat-icon-button color="warn"
+						(click)="deleteMember(user)">
+		        <mat-icon>remove_circle</mat-icon>
+				</button> 
+				
+				<button mat-icon-button color="warn" 
+						(click)="addInstruInMember(user)">
+		        <mat-icon>add</mat-icon>
+		    </button>  -->
+		  	
+		  </mat-list-item>
+		</mat-list>
+	</mat-card-content>
+</mat-card> 

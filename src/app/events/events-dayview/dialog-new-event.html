@@ -1,0 +1,510 @@
+<div *ngIf="auth.user | async as user"> 
+		<ng-template #loading>								
+				<br><br>
+				<mat-spinner color="warn"></mat-spinner>
+				<br><br>
+			</ng-template>
+			
+			
+			<!-- <div *ngIf="dev"> -->
+					<div *ngIf="user.role == 'public'">
+							<div
+							  fxLayout="row wrap"
+							  fxLayout.xs="column"
+							  fxFlexFill
+							  fxLayoutWrap
+								>
+						  
+								  <div 
+								  fxFlex="70"
+								  fxFlexAlign="start start">
+									  <h1 *ngIf="data.selectedCoiffeur" mat-dialog-title>
+										  Rendez-vous de <strong>{{data.selectedCoiffeur.firstname}} </strong>			   
+										  <span>
+											  <span >avec <strong>{{ user.firstname}} {{ user.lastname }}</strong></span>
+										  </span>
+										  
+									  </h1>				 
+								  </div>
+								  <div class="datatime"
+								  fxFlex="30"
+								  fxFlexAlign="center center">
+									  <span class="br3">le {{ data.date | date:'d MMM' }}. à {{data.time}}</span>
+								  </div> 						 	
+						  
+								<div
+									fxLayout="row wrap"
+									  fxLayout.xs="column"
+									fxFlexFill
+									fxLayoutWrap
+									  fxLayoutAlign="start start"
+									>
+						  
+									  <div fxFlex="100"><h4>Ajouter un élément au rendez-vous</h4></div>
+						  
+									  <div fxFlex="100">
+						  
+										  <mat-grid-list class="genre-list" cols="2" rowHeight="30px">
+											  <mat-grid-tile class="br3" (click)="showPrestaSelect=false;showForfaitsSelect=true;showTypeSelect=false;showTypeSelectForfait=true">
+											  Forfaits</mat-grid-tile>
+											  <mat-grid-tile class="br3" (click)="showPrestaSelect=true;showForfaitsSelect=false;showTypeSelect=true;showTypeSelectForfait=false">Prestations</mat-grid-tile>
+										  </mat-grid-list>
+						  
+										  <mat-grid-list *ngIf="showPrestaSelect" class="type-list" cols="5" rowHeight="20px">
+											  <mat-grid-tile class="br3"
+												  *ngFor="let type of types | async"
+												  (click)="typeSelected(type)">
+												  {{ type.title }}
+											  </mat-grid-tile>
+										  </mat-grid-list>
+						  
+										  <mat-grid-list class="type-list" cols="3" rowHeight="20px" *ngIf="showForfaitsSelect">
+											  <mat-grid-tile 
+												  *ngFor="let typef of forfaitTypes | async"
+												  (click)="typeSelectedForfait(typef)">
+												  {{ typef.title }}
+											  </mat-grid-tile>
+										  </mat-grid-list>			
+						  
+									  </div>
+						  
+									  <div fxFlex="100" *ngIf="showTypeSelect">
+										  <ng-template #loading><br><br><mat-spinner color="warn"></mat-spinner><br><br></ng-template>
+											  <div>
+												  <mat-chip-list *ngIf="prestations | async ; let prestations; else loading">
+													  <mat-chip class="matchipcb"
+														  *ngFor="let prestation of prestations | filter : filtre"
+														  (click)="formatPrestaBeforeInsert(data.selectedCoiffeur.firstname,prestation)">
+														  {{ prestation.title }}&nbsp;<strong>{{ prestation.time }} min</strong>
+													  </mat-chip>
+												  </mat-chip-list>	
+											  </div>
+									  </div>
+						  
+						  
+									  <div fxFlex="100" *ngIf="showTypeSelectForfait" >
+										  <ng-template #loading><br><br><mat-spinner color="warn"></mat-spinner><br><br></ng-template>				
+										  <mat-chip-list *ngIf="forfaits | async ; let forfaits; else loading">
+											  <mat-chip class="matchipcb"
+												  *ngFor="let forfait of forfaits | filterForfait : filtreForfait"
+												  (click)="formatForfaitBeforeInsert(data.selectedCoiffeur.firstname,forfait)">
+												  {{ forfait.title }}
+											  </mat-chip>
+										  </mat-chip-list>
+									  </div>
+						  
+						  
+									  <div fxFlex="100" *ngIf="showCartContent"><h4>Déroulé du rendez-vous</h4></div>
+						  
+									  <div class="event-program"
+									  fxLayoutWrap
+									  fxFlex="100"
+									  *ngFor="let element of cartData ;let i = index ">
+										  <div
+										  fxFlex="55"
+										  fxLayoutAlign="start center">
+											  <span class="buble-16 mr-10">{{ (i+1) }}</span>
+											  {{ element.title }}
+										  </div>
+										  <div
+										  fxFlex="20"
+										  fxLayoutAlign="start center">
+											  <!-- <span class="buble-16 mr-10"></span> -->
+											  {{ element.price }} €
+										  </div>
+										  <div
+										  fxFlex="5"
+										  fxLayoutAlign="start end">
+											  <strong>{{ element.quantity }} </strong>
+										  </div>
+										  <div
+										  fxFlex="10"
+										  fxLayoutAlign="start end">
+											  <strong>{{ element.time }} min</strong>
+										  </div>
+										  
+										  <div
+										  fxFlex="10"
+										  fxLayoutAlign="start end">
+											  <mat-icon class="cur-point"
+											  (click)="removeElement(i,element.price)">clear</mat-icon>
+										  </div>
+									  </div>
+						  
+									  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TOTAL HT : {{ totalHT }} €</div>
+									  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TAX 20% : {{ totalTAX }} €</div>
+									  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TOTAL TTC : {{ totalTTC }} €</div>
+						  
+								  </div>
+						  
+							  </div>
+						  
+							  <div mat-dialog-actions *ngIf="commandemodal">
+						  
+								  <button mat-fab (click)="onNoClick()" type="button" tabindex="-1" color="black">
+									  <mat-icon>close</mat-icon>
+								</button>
+						  
+								  <button mat-fab 
+									  [disabled]="cartData.length==0||!data.selectedCoiffeur"
+									  (click)="filteredClients=null;saveEvent(data,user)"
+									  type="button" tabindex="2" color="warn">
+									  <mat-icon>check</mat-icon> 
+								</button>
+						  
+							  </div>
+							  <br>
+		</div>
+
+		<div *ngIf="user.role !== 'public'" >  
+
+				<div *ngIf="filteredClients | async; let clients; else loading">
+						<div
+						  fxLayout="row wrap"
+						  fxLayout.xs="column"
+						  fxFlexFill
+						  fxLayoutWrap
+							>
+					  
+							  <div 
+							  fxFlex="70"
+							  fxFlexAlign="start start">
+								  <h1 *ngIf="data.selectedCoiffeur" mat-dialog-title>
+									  Rendez-vous de <strong>{{data.selectedCoiffeur.firstname}} </strong>
+													   
+									  <span *ngIf="!saveMeetingWithNewClient">
+										  <span *ngIf="selectedClient">avec <strong>{{ selectedClient.firstname}} {{ selectedClient.lastname }}</strong></span>
+									  </span>
+									  <span *ngIf="saveMeetingWithNewClient">
+										  <span *ngIf="newClientSelected | async; let newClientSelected">
+											  avec 
+											  <strong>{{ newClientSelected.firstname}} {{ newClientSelected.lastname }}</strong>
+											  {{ saveNewClientInfoInCtrl(newClientSelected) }}
+										  </span>
+									  </span> 
+									  
+								  </h1>				 
+							  </div>
+							  <div class="datatime"
+							  fxFlex="30"
+							  fxFlexAlign="center center">
+								  <span class="br3">le {{ data.date | date:'d MMM' }}. à {{data.time}}</span>
+							  </div>
+							  
+							  <div 
+								  *ngIf="searchClientForm"
+								  class="pt-20"
+								  fxFlex="100"
+								  fxLayoutAlign="center start">
+								  <mat-form-field class="full-width"
+								  *ngIf="!selectedClient">
+									<input 
+											matInput 
+											placeholder="Chercher une Client" aria-label="Client"
+											[matAutocomplete]="auto" 
+											[formControl]="clientCtrl">
+									<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+									  <mat-option *ngFor="let client of clients" 
+										  [value]="client">
+										<span><strong>{{ client.firstname }} {{ client.lastname }}</strong> <i>{{ client.phone }}</i></span>
+									  </mat-option>
+									</mat-autocomplete>
+									<mat-icon matSuffix>search</mat-icon>
+					  
+									<mat-icon matSuffix class="icon-button"
+										(click)="
+													formAddClient=true;
+													searchClientForm=false;
+													commandemodal=false
+													">add</mat-icon>
+								  </mat-form-field>
+					  
+										  <!-- 			  
+										  <mat-icon matSuffix 
+										(click)="onNoClick()"
+										routerLink="./../clientform">add</mat-icon> 
+										-->
+					  
+							  </div>
+
+							  <div class="datatime"
+							  fxFlex="30" fxFlexAlign="center center" *ngIf="!selectedClient && user.role !== 'public'">
+								 <span *ngIf="specialClient | async ; let sclient"  class="br3 click" (click)="getUnvailably(sclient)" >Gerer indisponibilite</span>
+							  </div> 
+						  
+					  
+					  
+					   
+							  <form *ngIf="formAddClient" #newClientForm="ngForm" (ngSubmit)="onSubmit(newClientForm)">		
+							<div
+								fxLayout="row wrap"
+								  fxLayout.xs="column"
+								fxFlexFill
+								fxLayoutWrap
+								  fxLayoutAlign="start start"
+								  [ngStyle]="{'padding-top': '20px'}"
+								>
+									  <div fxFlex="50">
+										  <mat-form-field class="full-width">
+											  <input matInput placeholder="Nouvelle Cliente : Prénom" required
+												  ngModel #newClientfirstname="ngModel"
+												  name="newClientfirstname">
+										  </mat-form-field>
+									  </div>
+									  <div fxFlex="50">				
+										  <mat-form-field class="full-width">
+											  <input matInput placeholder="Nom de famille" required
+											  ngModel #newClientlastname="ngModel"
+											  name="newClientlastname">
+										  </mat-form-field>
+									  </div>
+									  <div fxFlex="50">				
+										  <mat-form-field class="full-width">
+											  <input matInput placeholder="Email" type=email 
+											  ngModel #newClientemail="ngModel" 
+											  name="newClientemail">
+																	  <!-- [email]="true" -->
+										</mat-form-field>
+									</div>
+									  <div fxFlex="50">				
+										  <mat-form-field class="full-width">
+											  <input matInput mat-maxlength="3" placeholder="Phone" required
+											  ngModel #newClientphone 
+											  name="newClientphone">
+										  </mat-form-field>
+									  </div>
+					  
+									  <div fxFlex="100">				
+										  <button mat-fab type="button" color="black"
+											  (click)="onNoClick()">
+											  <mat-icon>close</mat-icon>
+										  </button>			    						 	
+										  <button mat-fab type="submit" color="warn"
+											  [disabled]="!newClientForm.form.valid">
+											  <mat-icon>save</mat-icon>
+										  </button>
+									  </div>
+							</div>
+							  </form>	    						 	
+					  
+					  
+							<div
+								*ngIf="selectedClient||newClientSelected"
+								fxLayout="row wrap"
+								  fxLayout.xs="column"
+								fxFlexFill
+								fxLayoutWrap
+								  fxLayoutAlign="start start"
+								>
+					  
+								  <div fxFlex="100"><h4>Ajouter un élément au rendez-vous</h4></div>
+					  
+								  <div fxFlex="100">
+					  
+									  <mat-grid-list class="genre-list" cols="2" rowHeight="30px">
+										  <mat-grid-tile class="br3" (click)="showPrestaSelect=false;showForfaitsSelect=true;showTypeSelect=false;showTypeSelectForfait=true">
+										  Forfaits</mat-grid-tile>
+										  <mat-grid-tile class="br3" (click)="showPrestaSelect=true;showForfaitsSelect=false;showTypeSelect=true;showTypeSelectForfait=false">Prestations</mat-grid-tile>
+									  </mat-grid-list>
+					  
+									  <mat-grid-list *ngIf="showPrestaSelect" class="type-list" cols="5" rowHeight="20px">
+										  <mat-grid-tile class="br3"
+											  *ngFor="let type of types | async"
+											  (click)="typeSelected(type)">
+											  {{ type.title }}
+										  </mat-grid-tile>
+									  </mat-grid-list>
+					  
+									  <mat-grid-list class="type-list" cols="3" rowHeight="20px" *ngIf="showForfaitsSelect">
+										  <mat-grid-tile 
+											  *ngFor="let typef of forfaitTypes | async"
+											  (click)="typeSelectedForfait(typef)">
+											  {{ typef.title }}
+										  </mat-grid-tile>
+									  </mat-grid-list>			
+					  
+								  </div>
+					  
+								  <div fxFlex="100" *ngIf="showTypeSelect">
+									  <ng-template #loading><br><br><mat-spinner color="warn"></mat-spinner><br><br></ng-template>
+										  <div>
+											  <mat-chip-list *ngIf="prestations | async ; let prestations; else loading">
+												  <mat-chip class="matchipcb"
+													  *ngFor="let prestation of prestations | filter : filtre"
+													  (click)="formatPrestaBeforeInsert(data.selectedCoiffeur.firstname,prestation)">
+													 <span *ngIf="prestation.title!=='Indisponible'" >{{ prestation.title }}&nbsp;<strong>{{ prestation.time }} min</strong></span>
+												  </mat-chip>
+											  </mat-chip-list>	
+										  </div>
+								  </div>
+					  
+					  
+								  <div fxFlex="100" *ngIf="showTypeSelectForfait" >
+									  <ng-template #loading><br><br><mat-spinner color="warn"></mat-spinner><br><br></ng-template>				
+									  <mat-chip-list *ngIf="forfaits | async ; let forfaits; else loading">
+										  <mat-chip class="matchipcb"
+											  *ngFor="let forfait of forfaits | filterForfait : filtreForfait"
+											  (click)="formatForfaitBeforeInsert(data.selectedCoiffeur.firstname,forfait)">
+											  {{ forfait.title }}
+										  </mat-chip>
+									  </mat-chip-list>
+								  </div>
+					  
+					  
+								  <div fxFlex="100" *ngIf="showCartContent"><h4>Déroulé du rendez-vous</h4></div>
+					  
+								  <div class="event-program"
+								  fxLayoutWrap
+								  fxFlex="100"
+								  *ngFor="let element of cartData ;let i = index ">
+									  <div
+									  fxFlex="55"
+									  fxLayoutAlign="start center">
+										  <span class="buble-16 mr-10">{{ (i+1) }}</span>
+										  {{ element.title }}
+									  </div>
+									  <div
+									  fxFlex="20"
+									  fxLayoutAlign="start center">
+										  <!-- <span class="buble-16 mr-10"></span> -->
+										  {{ element.price }} €
+									  </div>
+									  <div
+									  fxFlex="5"
+									  fxLayoutAlign="start end">
+										  <strong>{{ element.quantity }} </strong>
+									  </div>
+									  <div
+									  fxFlex="10"
+									  fxLayoutAlign="start end">
+										  <strong>{{ element.time }} min</strong>
+									  </div>
+									  
+									  <div
+									  fxFlex="10"
+									  fxLayoutAlign="start end">
+										  <mat-icon class="cur-point"
+										  (click)="removeElement(i,element.price)">clear</mat-icon>
+									  </div>
+								  </div>
+					  
+								  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TOTAL HT : {{ totalHT }} €</div>
+								  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TAX 20% : {{ totalTAX }} €</div>
+								  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TOTAL TTC : {{ totalTTC }} €</div>
+					  
+							  </div>
+
+							  <!-- disponibilite -->
+							  <div
+								*ngIf="indisponibility"
+								fxLayout="row wrap"
+								  fxLayout.xs="column"
+								fxFlexFill
+								fxLayoutWrap
+								  fxLayoutAlign="start start"
+								>
+					  
+								  <!-- <div fxFlex="100"><h4>Selectionner une ou plusieurs duree d'indisponibilite</h4></div> -->
+					  
+								  <!-- <div fxFlex="100"> -->
+					  
+									  <!-- <mat-grid-list class="genre-list" cols="2" rowHeight="30px">
+										  <mat-grid-tile class="br3" (click)="showPrestaSelect=false;showForfaitsSelect=true;showTypeSelect=false;showTypeSelectForfait=true">
+										  Forfaits</mat-grid-tile>
+										  <mat-grid-tile class="br3" (click)="showPrestaSelect=true;showForfaitsSelect=false;showTypeSelect=true;showTypeSelectForfait=false">Prestations</mat-grid-tile>
+									  </mat-grid-list> -->
+					  
+									  <!-- <mat-grid-list *ngIf="showPrestaSelect" class="type-list" cols="5" rowHeight="20px">
+										  <mat-grid-tile class="br3"
+											  *ngFor="let type of types | async"
+											  (click)="typeSelected(type)">
+											  {{ type.title }}
+										  </mat-grid-tile>
+									  </mat-grid-list> -->
+					  
+									  <!-- <mat-grid-list class="type-list" cols="3" rowHeight="20px" *ngIf="showForfaitsSelect">
+										  <mat-grid-tile 
+											  *ngFor="let typef of forfaitTypes | async"
+											  (click)="typeSelectedForfait(typef)">
+											  {{ typef.title }}
+										  </mat-grid-tile>
+									  </mat-grid-list>			 -->
+					  
+								  <!-- </div> -->
+									  <br><br>
+								   <div fxFlex="100" *ngIf="unvailable | async ; let prestations;else loading">
+									  <ng-template #loading><br><br><mat-spinner color="warn"></mat-spinner><br><br></ng-template>
+										  <div>
+											  <mat-chip-list>
+												  <mat-chip class="matchipcb"
+													  *ngFor="let prestation of prestations"
+													  (click)="formatPrestaBeforeInsert(data.selectedCoiffeur.firstname,prestation)">
+													 {{ prestation.title }}&nbsp;<strong>{{ prestation.time }} min</strong>
+												  </mat-chip>
+											  </mat-chip-list>	
+										  </div>
+								  </div>
+					  
+					  
+								  <!-- <div fxFlex="100" *ngIf="showTypeSelectForfait" >
+									  <ng-template #loading><br><br><mat-spinner color="warn"></mat-spinner><br><br></ng-template>				
+									  <mat-chip-list *ngIf="forfaits | async ; let forfaits; else loading">
+										  <mat-chip class="matchipcb"
+											  *ngFor="let forfait of forfaits | filterForfait : filtreForfait"
+											  (click)="formatForfaitBeforeInsert(data.selectedCoiffeur.firstname,forfait)">
+											  {{ forfait.title }}
+										  </mat-chip>
+									  </mat-chip-list>
+								  </div> -->
+					  
+					  
+								  <!-- <div fxFlex="100" *ngIf="showCartContent"><h4>Déroulé du rendez-vous</h4></div> -->
+<!-- 					  
+								  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TOTAL HT : {{ totalHT }} €</div>
+								  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TAX 20% : {{ totalTAX }} €</div>
+								  <div *ngIf="totalHT!=0" fxFlex="33" class="tt-pr br-bt">TOTAL TTC : {{ totalTTC }} €</div> -->
+					  
+							  </div>
+							  <!-- disponibilite -->
+					  
+						  </div>
+					  
+						  <div mat-dialog-actions *ngIf="commandemodal">
+					  
+							  <button mat-fab (click)="onNoClick()" type="button" tabindex="-1" color="black">
+								  <mat-icon>close</mat-icon>
+							</button>
+					  
+							<!-- [disabled]="cartData.length==0||!data.selectedCoiffeur||!selectedClient" -->
+							  <button mat-fab 
+								  *ngIf="!saveMeetingWithNewClient && !indisponibility"
+								  (click)="filteredClients=null;saveEvent(data,selectedClient)"
+								  type="button" tabindex="2" color="warn">
+								  <mat-icon>check</mat-icon>
+							</button>
+					  
+							<!-- [disabled]="cartData.length==0||!newClientSelected" -->
+							  <button mat-fab 
+								  *ngIf="saveMeetingWithNewClient && !indisponibility"		
+								  (click)="filteredClients=null;getNewClientBeforeSavingEvent(data)"
+								  type="button" tabindex="2" color="warn">
+								  <mat-icon>check</mat-icon>
+							</button>
+
+							<!-- [disabled]="cartData.length==0||!indisponibility" -->
+							<button mat-fab 
+								*ngIf="indisponibility"		
+								(click)="filteredClients=null;saveEvent(data,indisponibility)" 
+								type="button" tabindex="2" color="warn">
+								<mat-icon>check</mat-icon>
+					       </button>
+					  
+						  </div>
+						  <br>
+					  </div>
+
+		</div>
+			
+			
+
+</div>

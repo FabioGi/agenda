@@ -1,0 +1,96 @@
+
+
+<mat-card  class="br-20" *ngIf="addPrestation">
+	<mat-card-header>
+		<div mat-card-avatar class="example-header-image">
+			<mat-icon matListIcon>content_cut</mat-icon>
+		</div>			
+		<mat-card-title>Ajouter une Prestation</mat-card-title>
+		<mat-card-subtitle>Ajouter une prestation au Salon</mat-card-subtitle>		
+	</mat-card-header>
+
+	<mat-card-content>
+	<form #newPrestaForm="ngForm" (ngSubmit)="onSubmit(newPrestaForm)">
+		<table>
+
+ 			<tr>
+	 			<!-- 				
+	 			<td colspan="2">
+					<mat-form-field class="full-width">
+					  <mat-select required placeholder="Salons"
+					  	ngModel #selectedSalon="ngModel" name="selectedSalon">
+					    <mat-option *ngFor="let salon of salons | async" 
+					    	[value]="salon">
+					    	{{ salon.title }}
+					    </mat-option>
+					  </mat-select>
+					</mat-form-field>
+				</td> 
+				-->
+			</tr>
+			<tr>
+				<td colspan="2">
+					<mat-form-field class="full-width">
+						<input matInput placeholder="Title" 
+							required
+							ngModel #newPrestaTitle="ngModel"
+							name="newPrestaTitle">
+					</mat-form-field>					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<mat-form-field>
+						<input matInput placeholder="Prix Équipe"
+							required 
+							ngModel #newPrestaPrix="ngModel"
+							name="newPrestaPrix">
+						<mat-icon matSuffix>euro_symbol</mat-icon>							
+					</mat-form-field>
+				</td>
+				<td>
+					<mat-form-field>
+						<input matInput placeholder="Prix David"
+							ngModel #newPrestaPrixDavid="ngModel"
+							name="newPrestaPrixDavid">
+						<mat-icon matSuffix>euro_symbol</mat-icon>
+					</mat-form-field>					
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<mat-form-field class="field-types">
+					  <mat-select ngModel required 
+					  	#selectedTypes="ngModel" name="selectedTypes" placeholder="Types de prestations" multiple>
+					    <mat-option *ngFor="let prestatype of prestatypes | async" [value]="prestatype">{{prestatype.title}}</mat-option>
+					  </mat-select>
+					</mat-form-field>					
+				</td>
+			</tr>				
+			<tr>
+				<td colspan="2">
+					<br>
+					<mat-radio-group required 
+						ngModel #selectedTime="ngModel" name="selectedTime">
+					  <mat-radio-button *ngFor="let time of times" [value]="time">
+					  	{{ time }} minutes
+					  </mat-radio-button>
+					</mat-radio-group>
+				</td>
+			</tr>
+		</table>
+
+		<br><br><br>
+
+		<button mat-fab (click)="goBack()" type="button" color="black">
+			<mat-icon>keyboard_arrow_left</mat-icon>
+		</button>
+		<button mat-fab type="submit" color="accent"
+			[disabled]="!newPrestaForm.form.valid">
+			<mat-icon>save</mat-icon>
+		</button>			
+	</form>
+	</mat-card-content>
+</mat-card>
+
+

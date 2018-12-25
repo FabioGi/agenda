@@ -1,0 +1,67 @@
+.example-full-width {
+  width: 100%;
+}
+
+.example-fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+
+#mainToolbarDLAPP mat-chip-list {
+    float: right;
+    position: absolute;
+    right: 15px;
+}
+#mainToolbarDLAPP mat-chip-list md-chip {
+    cursor: pointer;
+}
+
+h1 {
+    text-transform: uppercase;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.hoverpointer {
+	cursor: pointer;
+}
+
+
+mat-chip md-icon {
+  padding: 0 2px;
+}
+
+
+.day-cal {
+  position: absolute;
+  left: 300px;
+}
+
+.day-cal input {
+  font-size: 0.8em;
+}
+
+.main-menu-trigger-button {
+  position: absolute;
+  float: right;
+  z-index: 100;
+  right: 20px;
+  top: 20px;
+}
+
+
+.main-menu .close, .main-menu .close span {
+  color: #eee !important
+}
+
+.main-menu mat-list-item span {
+  color: #999;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  padding-left: 10px;
+  transition: all 0.2s; 
+}
+.main-menu mat-list-item:hover span {
+  color: #000;
+}
+

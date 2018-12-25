@@ -1,0 +1,96 @@
+<ng-template #loading>				
+	<br><br>
+	<mat-spinner color="warn"></mat-spinner>
+	<br><br>
+</ng-template>
+
+<!-- <pre>{{ prestations | async | json }}</pre> -->
+<!-- <pre>{{ types | async | json }}</pre> -->
+
+<!-- <mat-card *ngIf="dev"> -->
+<mat-card class="br-20" *ngIf="prestations | async; let prestations; else loading">
+	<mat-card-header class="example-full-width">
+		<div mat-card-avatar class="example-header-image">
+			<mat-icon matListIcon>content_cut</mat-icon>
+		</div>
+		<mat-card-title>Prestations</mat-card-title>
+		<mat-card-subtitle>Liste des Prestations proposées par le Salon</mat-card-subtitle>
+	  <span class="example-fill-remaining-space"></span>
+		<!-- <button mat-fab (click)="addComposer=false;addComposers=false" type="button" color="black"><mat-icon>search</mat-icon></button> -->
+		<button mat-fab routerLink="./../prestationform" type="button" color="black"><mat-icon>add</mat-icon></button>
+		<button mat-fab routerLink="./../calendar" type="button" color="black">
+			<mat-icon>today</mat-icon>
+		</button>					
+	</mat-card-header>
+
+	<mat-card-content>
+
+		<br>
+
+		<mat-chip-list>
+		  <mat-chip class="type-menu br3"
+		  	*ngFor="let type of types | async"
+		  	(click)="typeSelected(type)">
+		  	{{ type.title }}
+		  </mat-chip>
+		</mat-chip-list>
+
+		<br>
+
+		<div *ngIf="showTypeSelect" >
+			<!-- 			
+			<div *ngIf="typeselected != ''">
+					<mat-card-title>
+						<strong>{{ typeselected }}</strong>
+					</mat-card-title>
+			</div> 
+			-->
+			<mat-list dense>
+				<mat-list-item *ngFor="let presta of prestations | filter : filtre">
+					<button mat-icon-button *ngIf="(auth.user | async)?.role == 'admin'"
+						[routerLink]="['./../prestation', presta.$key]">
+				     <mat-icon>info</mat-icon>
+				  </button> 
+				  <button mat-icon-button color="warn" *ngIf="(auth.user | async)?.role == 'admin'"
+							(click)="deletePrestation(presta)">
+			        <mat-icon>remove_circle</mat-icon>
+			    </button>					
+					<div class="d-b">
+						
+						<span class="prestatitle">
+							<strong *ngIf="presta.time">{{ presta.time }} min : </strong>
+							{{ presta.title }}
+						</span>
+
+						<mat-form-field [hidden]="presta.priceTeam" class="field-price">
+		  				<input matInput placeholder="Prix Equipe" type="number"
+		  					[(ngModel)]="presta.priceTeam"
+		  					(ngModelChange)="updateField(presta,'priceTeam',presta.priceTeam)">
+		  				<mat-icon matSuffix>euro_symbol</mat-icon>
+						</mat-form-field>
+
+						<mat-form-field [hidden]="presta.priceDavid" class="field-price">
+		  				<input matInput placeholder="Prix David" type="number"
+		  					[(ngModel)]="presta.priceDavid"
+		  					(ngModelChange)="updateField(presta,priceDavidField,presta.priceDavid)">
+		  				<mat-icon matSuffix>euro_symbol</mat-icon>
+						</mat-form-field>
+
+					</div>
+									 
+	 				<div *ngIf="presta.types" class="ml10">
+						<mat-chip-list>
+						  <mat-chip class="br3" *ngFor="let type of presta.types">
+						  	{{ type[1] }}
+						  	<!-- <mat-icon matChipRemove (click)="removeTypeFromPresta(presta,type)">cancel</mat-icon> -->
+						  </mat-chip>							
+						</mat-chip-list>
+					</div>
+
+				</mat-list-item>
+			</mat-list>
+		</div>
+	</mat-card-content>
+</mat-card>
+
+

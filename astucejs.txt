@@ -1,0 +1,49 @@
+// es5
+var myFn = function(x) {
+  return x + 1;
+};
+
+// es6
+const myFn = x => {
+  return x + 1;
+};
+
+<ng-template [ngIf]="lessons" [ngIfElse]="loading">
+   <div class="lessons-list">
+     ... 
+   </div>
+</ng-template>
+
+<div *ngIf="isLoggedIn; else loggedOut">
+  Welcome back, friend.
+</div>
+
+<ng-template #loggedOut>
+  Please friend, login.
+</ng-template>
+
+<ng-container
+  *ngIf="isLoggedIn; then loggedIn; else loggedOut">
+</ng-container>
+
+<ng-template #loggedIn>
+  <div>
+    Welcome back, friend.
+  </div>
+</ng-template>
+<ng-template #loggedOut>
+  <div>
+    Please friend, login.
+  </div>
+</ng-template>
+
+<div>
+  <user-profile
+    [user]="(user$ | async)?.profile">
+  </user-profile>
+  <user-messages
+    [user]="(user$ | async)?.messages">
+  </user-messages>
+</div>
+
+<div [ngStyle]="{'background-color':person.country === 'UK' ? 'green' : 'red' }"></<div>

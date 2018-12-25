@@ -1,0 +1,55 @@
+<ng-template #loading>				
+  <br><br>
+  <mat-spinner color="warn"></mat-spinner>
+  <br><br>
+</ng-template>
+          
+                    
+<mat-card class="br-20" *ngIf="forfaits | async; let forfaits; else loading">
+  <mat-card-header class="example-full-width">
+    <mat-card-title>Forfaits</mat-card-title>
+    <mat-card-subtitle>Liste des Forfaits proposés au Salon</mat-card-subtitle>
+    <button mat-fab routerLink="./../forfaitform" type="button" color="black">
+      <mat-icon>add</mat-icon>
+    </button>
+    <button mat-fab routerLink="./../calendar" type="button" color="black">
+      <mat-icon>today</mat-icon>
+    </button>					
+  </mat-card-header>
+
+  <mat-card-content>
+    <br>
+    <mat-list dense>
+      <mat-list-item *ngFor="let forfait of forfaits ">
+        <mat-icon matListIcon>local_offer</mat-icon>
+          
+        <span class="forfait-title"><strong>{{ forfait.title }}</strong></span>
+        <!-- <span class="forfait-detail">{{ forfait.time }}<mat-icon>access_time</mat-icon></span> -->
+        <!-- <span class="forfait-detail">{{ forfait.priceTeam }}<mat-icon>euro_symbol</mat-icon></span> -->
+          
+        <mat-chip-list *ngIf="forfait.prestations" class="ml-10">
+          <mat-chip color="primary" selected="true" class="chip-fixed-width">
+            {{ forfait.type }}
+          </mat-chip>
+          <mat-chip *ngFor="let prestation of forfait.prestations ">
+            {{ prestation.title }}
+          </mat-chip>
+        </mat-chip-list>
+
+          <!--
+          <button mat-icon-button
+            [routerLink]="['./../forfait', forfait.$key]">
+             <mat-icon>info</mat-icon>
+          </button>
+          -->
+          <button mat-icon-button
+              (click)=" deleteForfait(forfait)">
+              <mat-icon>remove_circle</mat-icon>
+          </button>
+
+      </mat-list-item>
+   
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+        

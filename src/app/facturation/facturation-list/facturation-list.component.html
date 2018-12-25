@@ -1,0 +1,155 @@
+<ng-template #loading>				
+	<br><br><br><br>
+	<mat-spinner color="warn"></mat-spinner>
+	<br><br>
+</ng-template>
+
+<!-- {{ calendarDate }} <br> {{ dateForQuery }} <br><br> -->
+
+<!-- <mat-form-field>
+  <input matInput placeholder="Select Date"
+  [matDatepicker]="picker"
+  [(ngModel)]="dateSelected"
+  (ngModelChange)="updateDate(dateSelected)">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>  -->
+
+
+<!-- <div *ngIf="bills$ | async; let bills; else loading"> -->
+  <!-- <ul> -->
+    <!-- <li *ngFor="let bill of bills"> -->
+      <!-- <pre>{{ bill | json }}</pre> -->
+      <!-- <code>{{ event.payload.key }}</code> -  -->
+      <!-- {{ bill.clientfullname }} - -->
+      <!-- {{bill.totalTTC}} € -->
+      <!-- {{bill.payload.val().time}} -->
+      <!-- <pre> {{ bill | json }} </pre> -->
+    <!-- </li> -->
+  <!-- </ul> -->
+  <!-- <div *ngIf="bills.length === 0">No results, try clearing filters</div> -->
+<!-- </div> -->
+
+
+
+<!-- <mat-card *ngIf="dev"> -->
+<mat-card class="br-20" 
+*ngIf="bills | async; let bills; else loading" >
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image">
+      <mat-icon matListIcon>receipt</mat-icon>
+    </div>      
+    <mat-card-title>Factures</mat-card-title>
+    <mat-card-subtitle>
+      Liste des Factures du Salon <br>
+      {{ dateSelected }}
+   </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="bills$ | async; let bills; else loading">
+
+    <div class="date-move">
+      <span class="com-date"><mat-icon (click)="changeDay(calendarDate,'-7')">fast_rewind</mat-icon></span>
+      <span class="com-date"><mat-icon (click)="changeDay(calendarDate,'-1')">keyboard_arrow_left</mat-icon></span>
+      <span class="showdate"> {{calendarDate | date:'EEEE d MMM'}}</span>
+      <span class="com-date"><mat-icon (click)="changeDay(calendarDate,'1')">keyboard_arrow_right</mat-icon></span>
+      <span class="com-date"><mat-icon (click)="changeDay(calendarDate,'7')">fast_forward</mat-icon></span>
+    </div>
+
+    <ul class="coiffeur-menu" *ngIf="totalCart; else nomoney">
+      <li *ngFor="let member of members | async" (click)="openDialog(member,calendarDate)">{{ member.name }}</li>
+    </ul>
+
+  	<br>
+
+    <ng-template #nomoney>
+      <h3>Easy <strong>today</strong> ! </h3>
+    </ng-template>    
+
+    <div *ngFor="let bill of bills" class="bill-list">
+      <!-- <h4 mat-line [ngClass]="facture.status==2 ? 'facture-done' : 'facture-waiting'"> -->
+    	<span class="facture-title">
+    		<span class="info-bill">
+          <mat-icon [routerLink]="['./../printbill', bill.$key]">info</mat-icon>  
+          Fac. n° <strong>{{ bill.ref }}</strong>
+        </span>
+    		<span class="client">
+          <mat-icon [routerLink]="['./../client', bill.clientkey]">info</mat-icon>
+          <strong>{{ bill.clientfullname }}</strong>
+          <i>({{ bill.date }})</i>
+        </span> 
+        <span class="reglement"> 
+          <strong *ngIf="bill.moyendepaiement=='CH'">Chèque</strong>
+          <strong *ngIf="bill.moyendepaiement=='CC'">Carte Cadeau</strong>
+          <strong *ngIf="bill.moyendepaiement=='CB'">Carte Bancaire</strong>
+          <strong *ngIf="bill.moyendepaiement=='VB'">Virement Bancaire</strong>
+          <strong *ngIf="bill.moyendepaiement=='ES'">Espèces</strong>
+        </span>                 
+        <span class="montant">
+          Montant TTC :
+          <strong>{{ bill.totalTTC }} </strong> €
+          {{ addToTotal(bill.$key, bill.totalTTC) }}
+        </span>
+        <span class="promo" *ngIf="bill.promo">-{{ (bill.promo*100) }} %</span>                
+    	</span>
+
+      <ul class="presta-membres">
+        <li class="br3">{{ bill.timestamp | date:'h:mma' }}</li>
+        <li><strong>Prestations :</strong></li>
+        <li *ngFor="let presta of bill.arrprestas">
+          {{ presta.membername }} : 
+          <strong>{{ presta.price }} €</strong>
+        </li>
+        <li *ngIf="bill.arrproduits"><strong>Produits : </strong></li>
+        <li *ngFor="let pdct of bill.arrproduits">
+          {{ pdct.membername }} : 
+          <strong>{{ pdct.price }} €</strong>
+        </li>        
+      </ul>
+    </div>
+        
+      <!-- 
+      <span *ngIf="facture.timestamp" class="facture-date">{{ cart.timestamp | date}} | Réglement: <strong>{{ facture.moyendepaiement }}</strong> | Statut : <strong>{{ facture.statut }}</strong></span> 
+      -->
+      <!-- 
+      <!-- 
+      facture WAITING 
+			<button mat-icon-button color="warn"
+				*ngIf="facture.statut==0"
+				(click)="changeFactureStatut(facture)">
+	        <mat-icon>hourglass_empty</mat-icon>
+	    </button>
+      <!-- 
+      facture ON GOING 
+			<button mat-icon-button
+				*ngIf="facture.statut==1"
+				(click)="changeFactureStatut(facture)">
+	        <mat-icon>hourglass_full</mat-icon>
+	    </button>
+      <!-- 
+      facture DONE 		    
+			<button mat-icon-button
+				*ngIf="facture.statut==11">
+	        <mat-icon>done</mat-icon>
+	    </button>		     
+			<button mat-icon-button
+					(click)="deleteFacture(facture)">
+	        <mat-icon>remove_circle</mat-icon>
+	    </button> 
+      -->
+
+      <ul class="totaux">
+        <li *ngIf="total_CB">Carte Bancaire : <strong>{{ total_CB }} €</strong></li>
+        <li *ngIf="total_CC">Carte Cadeau : <strong>{{ total_CC }} €</strong></li>      
+        <li *ngIf="total_CH">Chèque : <strong>{{ total_CH }} €</strong></li>
+        <li *ngIf="total_ES">Espèces : <strong>{{ total_ES }} €</strong></li>
+        <li *ngIf="total_VB">Virement : <strong>{{ total_VB }} €</strong></li>
+      </ul>
+      <div class="total-amount" *ngIf="totalCart">
+          Montant Total : 
+          <strong>{{ totalCart }} €</strong>
+      </div>
+
+
+  </mat-card-content>
+</mat-card>

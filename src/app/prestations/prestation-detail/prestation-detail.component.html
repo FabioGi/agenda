@@ -1,0 +1,90 @@
+<mat-card class="br-20" *ngIf="prestation | async as prestation" mat-card-900>
+	<br>
+	<mat-card-header>
+		<div mat-card-avatar class="example-header-image">
+			<mat-icon matListIcon>content_cut</mat-icon>
+		</div>	
+		<mat-card-title>Modifier la prestation : <strong>{{ prestation.title }}</strong></mat-card-title>
+		<mat-card-subtitle>Modifier les informations de la prestation<br>
+			<span class="keystyle">{{ prestation.$key }}</span>
+		</mat-card-subtitle>
+	</mat-card-header>
+	<mat-card-content>
+
+		<mat-radio-group>
+		  <mat-radio-button 
+		  	*ngFor="let time of times" 
+		  	[value]="time"
+		  	[checked]="time==prestation.time"
+		  	(change)="updateField(prestation,timeField,time)">
+		  	{{ time }} minutes
+		  </mat-radio-button>
+		</mat-radio-group>
+
+		<br><br>
+
+		<mat-form-field class="full-width">
+			<input matInput placeholder="Title" required
+				[(ngModel)]="prestation.title"
+				(ngModelChange)="updateField(prestation,titleField,prestation.title)">
+		</mat-form-field>
+		<br>
+		<mat-form-field>
+			<input matInput placeholder="Prix Équipe" required
+				type="number"
+				[(ngModel)]="prestation.priceTeam"
+				(ngModelChange)="updateField(prestation,priceTeamField,prestation.priceTeam)">
+			<mat-icon matSuffix>euro_symbol</mat-icon>
+		</mat-form-field>
+		<mat-form-field>
+			<input matInput placeholder="Prix David" required
+				type="number"
+				[(ngModel)]="prestation.priceDavid"
+				(ngModelChange)="updateField(prestation,priceDavidField,prestation.priceDavid)">
+			<mat-icon matSuffix>euro_symbol</mat-icon>
+		</mat-form-field>
+
+					<mat-chip-list>
+					  <mat-chip *ngFor="let prestatype of prestation.arrtypes">
+					  	{{ prestatype[1] }}
+					  	<mat-icon matChipRemove 
+					  		(click)="removeTypeFromPresta(prestation,prestatype[0])">cancel</mat-icon>
+					  </mat-chip>
+					   
+						<mat-chip color="primary"
+							*ngIf="showAddTypeButton">
+							<strong>Add</strong>
+							<mat-icon matChipRemove
+								(click)="
+									showTypeSelect=true;
+									showAddTypeButton=false
+									">add_circle</mat-icon>
+						</mat-chip> 
+					
+					</mat-chip-list>
+
+					<mat-form-field class="full-width"
+						*ngIf="showTypeSelect">
+					  <mat-select 
+					  	placeholder="Select Type" 
+					  	class="full-width"
+					  	[(ngModel)]="newType"
+					  	(ngModelChange)="
+					  		addTypeToPresta(prestation,newType);
+					  		showTypeSelect=false;
+					  		showAddTypeButton=true
+					  	">
+					    <mat-option 
+					    	*ngFor="let newType of types | async" 
+					    	[value]="newType">
+					    	{{ newType.title }}
+					    </mat-option>
+					  </mat-select>						  
+					</mat-form-field>						
+	
+	</mat-card-content>
+
+	<button mat-fab (click)="goBack()" color="black">
+		<mat-icon>keyboard_arrow_left</mat-icon>
+	</button>	
+</mat-card>

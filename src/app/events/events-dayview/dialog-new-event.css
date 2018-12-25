@@ -1,0 +1,146 @@
+mat-spinner {
+	margin: 0 auto;
+}
+
+mat-chip {
+  margin: 2px !important;
+  padding: 4px 8px !important;
+  font-size: 0.9em;
+  background-color: #eee !important;
+	-webkit-border-radius: 3px !important;
+	-moz-border-radius: 3px !important;
+	border-radius: 3px !important; 
+	color: #808080  !important;
+	cursor:pointer !important; 
+}
+mat-chip:hover {
+	color: #FFF !important;
+  background-color: #666666 !important;	
+}
+.click
+{
+    cursor: pointer;
+}
+
+h1 {
+	font-size: 1.1em !important;
+	color: #000;
+	font-weight: 400;
+	margin-bottom: 0;
+	line-height: 1.2em;
+}
+h2 {
+	font-size: 1.1em !important;
+	color: #666666;
+	font-weight: normal;
+	margin: 5px 0 10px;
+}
+h3 {
+	font-size: 0.7em !important;
+	color: #333;
+	font-weight: bold;
+	background-color: #000;
+	color: #FFF;
+	padding: 0 10px;
+	margin: 0;	
+}
+h4 {
+	padding: 10px 0;
+	margin: 0;
+}
+
+button {
+	margin-right: 15px;
+}
+
+.datatime span {
+	font-size: 1em;
+	background-color: #000;
+	color: #fff;
+	display: block;
+	width: 100%;
+	text-align: center;
+}
+
+
+.icon-button {
+	color: #999;
+	cursor:pointer;
+}
+.icon-button:hover {
+	color: #000;
+}
+
+.event-program {
+	color: #333;
+	font-size: 0.8em;
+}
+
+.mr-10 {
+	margin-right: 10px;
+}
+
+.pt-20 {
+	padding-top: 15px
+}
+
+.tt-pr {
+	font-size: 10px;
+	margin-top: 10px;
+	border-top: 1px dotted #eee;
+	text-transform: uppercase;
+	color: #666;
+	padding: 5px 10px;
+}
+
+.presta-forfait {
+	margin-bottom: 10px;
+}
+.presta-forfait mat-grid-tile {
+  /*background: lightgrey;*/
+  border: 1px dotted #ccc;
+  color: #ccc;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  text-align: center;
+} 
+.presta-forfait mat-grid-tile:hover {
+	border: 1px solid #333;
+	background-color: #000;
+}
+
+.type-list {
+	margin-bottom: 10px;
+}
+.type-list mat-grid-tile {
+  text-align: center;
+  line-height: 1em;
+  background-color: #999999;
+  color: #eee;
+  font-size: 10px;
+  text-transform: uppercase;
+	cursor: pointer;
+}
+.type-list mat-grid-tile:hover {
+	background-color: #000;
+}
+
+
+.genre-list {
+	margin-bottom: 2px;
+}
+.genre-list mat-grid-tile {
+  background-color: #7F7F7F;	
+  color: #eee;
+  text-transform: uppercase;
+	cursor: pointer;  
+}
+.genre-list mat-grid-tile:hover {
+  background-color: #191919;	
+  color: #eee;
+}
+
+
+
+

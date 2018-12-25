@@ -1,0 +1,212 @@
+<button mat-fab class="main-menu-trigger-button doNotPrint"
+ *ngIf="auth.user | async as user"
+  [matMenuTriggerFor]="appMenu" color="warn">
+  <mat-icon>menu</mat-icon>
+</button>
+
+
+<mat-menu #appMenu="matMenu" yPosition="below" xPosition="before">
+
+  <mat-nav-list class="main-menu" *ngIf="(auth.user | async)?.role == 'agent'" >
+
+    <mat-list-item routerLink="./calendar">
+        <mat-icon> today </mat-icon>
+        <span>Calendar</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./carts">
+        <mat-icon> shopping_cart </mat-icon>
+        <span>Carts</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./clientsearch">
+        <mat-icon> face </mat-icon>
+        <span>Clients</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./members">
+        <mat-icon>people</mat-icon>
+        <span>Members</span>
+    </mat-list-item>
+        
+    <mat-list-item routerLink="./prestations">
+        <mat-icon>content_cut</mat-icon>
+        <span>Prestations</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./forfaits">
+        <mat-icon>content_cut</mat-icon>
+        <span>Forfaits</span>
+    </mat-list-item>    
+
+    <mat-list-item routerLink="./products">
+        <mat-icon>loyalty</mat-icon>
+        <span>Products</span>
+    </mat-list-item> 
+
+<!--     <mat-list-item routerLink="./carts">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Shopping Cart</span>
+    </mat-list-item>  -->
+
+<!--     <mat-list-item routerLink="./facturations">
+        <mat-icon>payment</mat-icon>
+        <span>Facturation</span>
+    </mat-list-item>  -->   
+
+    <mat-list-item routerLink="./bills" disabled>
+        <mat-icon> chrome_reader_mode </mat-icon>
+        <span>Report</span>
+    </mat-list-item>
+   
+    <mat-divider></mat-divider>
+
+    <mat-list-item (click)="gotoUserProfile()">
+      <mat-icon>person</mat-icon>
+      <span>{{ (auth.user | async)?.displayName }}</span>
+    </mat-list-item>
+
+    <mat-list-item (click)="logout()" color="accent">
+      <mat-icon>power_settings_new</mat-icon>
+      <span> Sign out</span>      
+    </mat-list-item>
+
+     <button *ngIf="(auth.user | async)?.role == 'admin'" mat-menu-item routerLink='/users'>
+        <mat-icon>persons</mat-icon>
+        <span>Users</span>
+      </button>
+    
+
+  </mat-nav-list>
+
+
+  <mat-nav-list class="main-menu" *ngIf="(auth.user | async)?.role == 'admin'" >
+
+    <mat-list-item routerLink="./calendar">
+        <mat-icon> today </mat-icon>
+        <span>Calendar</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./carts">
+        <mat-icon> shopping_cart </mat-icon>
+        <span>Carts</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./clientsearch">
+        <mat-icon> face </mat-icon>
+        <span>Clients</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./members">
+        <mat-icon>people</mat-icon>
+        <span>Members</span>
+    </mat-list-item>
+        
+    <mat-list-item routerLink="./prestations">
+        <mat-icon>content_cut</mat-icon>
+        <span>Prestations</span>
+    </mat-list-item>
+
+    <mat-list-item routerLink="./forfaits">
+        <mat-icon>content_cut</mat-icon>
+        <span>Forfaits</span>
+    </mat-list-item>    
+
+    <mat-list-item routerLink="./products">
+        <mat-icon>loyalty</mat-icon>
+        <span>Products</span>
+    </mat-list-item> 
+
+<!--     <mat-list-item routerLink="./carts">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Shopping Cart</span>
+    </mat-list-item>  -->
+
+<!--     <mat-list-item routerLink="./facturations">
+        <mat-icon>payment</mat-icon>
+        <span>Facturation</span>
+    </mat-list-item>  -->   
+
+    <mat-list-item routerLink="./bills" disabled>
+        <mat-icon> chrome_reader_mode </mat-icon>
+        <span>Report</span>
+    </mat-list-item>
+   
+    <mat-divider></mat-divider>
+
+    <mat-list-item (click)="gotoUserProfile()">
+      <mat-icon>person</mat-icon>
+      <span>{{ (auth.user | async)?.displayName }}</span>
+    </mat-list-item>
+
+    <mat-list-item (click)="logout()" color="accent">
+      <mat-icon>power_settings_new</mat-icon>
+      <span> Sign out</span>      
+    </mat-list-item>
+
+     <button *ngIf="(auth.user | async)?.role == 'admin'" mat-menu-item routerLink='/users'>
+        <mat-icon>persons</mat-icon>
+        <span>Users</span>
+      </button>
+    
+
+  </mat-nav-list>
+
+  <mat-nav-list class="main-menu" *ngIf="(auth.user | async)?.role == undefined" >
+
+        <mat-list-item routerLink="./calendar">
+            <mat-icon> today </mat-icon>
+            <span>Calendar</span>
+        </mat-list-item>
+
+        <!-- <mat-list-item routerLink="./client/{{(auth.user | async)?.clientkey}}" *ngIf="(auth.user | async)?.clientkey" > 
+            <mat-icon> face </mat-icon>
+            <span>Clients</span>
+        </mat-list-item> -->
+    
+        <mat-list-item (click)="gotoUserProfile()">
+          <mat-icon>person</mat-icon>
+          <span>{{ (auth.user | async)?.displayName }}</span>
+        </mat-list-item>
+    
+        <mat-list-item (click)="logout()" color="accent">
+          <mat-icon>power_settings_new</mat-icon>
+          <span> Sign out</span>      
+        </mat-list-item>
+    
+      </mat-nav-list>
+
+      <mat-nav-list class="main-menu" *ngIf="(auth.user | async)?.role == 'public'" >
+
+            <mat-list-item routerLink="./calendar">
+                <mat-icon> today </mat-icon>
+                <span>Calendar</span>
+            </mat-list-item>
+    
+            <!-- <mat-list-item routerLink="./client/{{(auth.user | async)?.clientkey}}" *ngIf="(auth.user | async)?.clientkey" > 
+                <mat-icon> face </mat-icon>
+                <span>Clients</span>
+            </mat-list-item> -->
+        
+            <mat-list-item (click)="gotoUserProfile()">
+              <mat-icon>person</mat-icon>
+              <span>{{ (auth.user | async)?.displayName }}</span>
+            </mat-list-item>
+        
+            <mat-list-item (click)="logout()" color="accent">
+              <mat-icon>power_settings_new</mat-icon>
+              <span> Sign out</span>      
+            </mat-list-item>
+        
+          </mat-nav-list>
+
+      <mat-nav-list class="main-menu" *ngIf="(auth.user | async)?.role == 'prohibit'" >
+    
+        <mat-list-item (click)="logout()" color="accent">
+          <mat-icon>power_settings_new</mat-icon>
+          <span> Sign out</span>      
+        </mat-list-item>
+    
+      </mat-nav-list>
+  
+</mat-menu>

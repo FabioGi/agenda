@@ -1,0 +1,259 @@
+<!-- <pre>
+	{{auth.user | async | json}}
+</pre> -->
+<div *ngIf="auth.user | async as user" > 
+		<ng-template #loading>								
+				<br><br>
+				<mat-spinner color="warn"></mat-spinner>
+				<br><br>
+			</ng-template>
+			
+			<div *ngIf="justClicked; else loading">
+				<div *ngIf="cart | async; let cart; else loading" 
+					fxLayout="row wrap"
+					fxLayout.xs="column"
+					fxLayoutAlign="center center"
+					fxFlexFill
+					fxLayoutWrap>
+			
+					<!-- <p>{{ cart.$key }}</p> -->
+			
+					<div *ngIf="cart.clientemail == 'Indisponible'"  
+						fxFlex="70"
+						[ngStyle]="{'font-size': '1.2em'}"
+					>
+						<strong>
+							Coiffeur Absent
+						</strong> 
+					</div>
+					<!-- disponible -->
+					<div *ngIf="cart.clientemail !== 'Indisponible'"  
+					fxFlex="70"
+					[ngStyle]="{'font-size': '1.2em'}"
+				>
+					Rendez-vous de
+					<strong>
+						{{ cart.clientfullname }}
+						<i *ngIf="cart.clientemail" class="material-icons clientlinkicon" [routerLink]="['./../client', cart.clientkey]" (click)="onNoClick()">info</i>
+						<i *ngIf="!cart.clientemail" class="material-icons clientlinkicon" [routerLink]="['./../client', cart.clientkey]" (click)="onNoClick()">alternate_email</i>
+					</strong> 
+					<mat-icon class="cur-point" *ngIf="!showclientdetail&&cart.clientPhone" (click)="showclientdetail=true">add_circle</mat-icon>
+				</div>
+					<div 
+						fxFlex="30"
+						[ngStyle]="{'font-size': '1em'}"
+						class="bg-black br3"
+					>
+						<strong>{{ cart.date }}</strong> à <strong>{{ cart.cartstarttime }}</strong>
+					</div>
+			
+					<div *ngIf="showclientdetail" class="client-detail"
+					fxFlex="100">
+						<a *ngIf="cart.clientphone" href="tel:{{cart.clientphone}}">{{ cart.clientphone }} </a>
+						<a *ngIf="cart.clientemail" href="mailto:{{cart.clientemail}}">{{ cart.clientemail }}</a>
+						<mat-icon class="cur-point" (click)="onNoClick()" [routerLink]="['./../client', cart.clientKey]">remove_red_eye</mat-icon>
+					</div>
+			
+					<br><br>
+
+			<!-- <div *ngIf="cart.clientemail == 'Indisponible'" >
+			
+			</div> -->
+					
+
+					<!-- disponible -->
+			<div *ngIf="cart.clientemail !== 'Indisponible'" class="event-program"
+				fxLayoutWrap
+				fxFlex="100"
+				[ngStyle]="
+					{
+						'margin-top': '5px',
+						'padding-top': '5px',
+						'border-top': '1px dotted #eee'
+					}">
+
+					<div class="event-program"
+					fxLayoutWrap
+					fxFlex="100"
+					[ngStyle]="
+							{
+								'margin-top': '5px',
+								'padding-top': '5px',
+								'border-top': '1px dotted #eee'
+							}"
+					*ngFor="let element of cart.prestas ;let i = index ">
+			
+						<div
+						fxFlex="59"
+						fxLayoutAlign="start center">
+							<span class="buble-16 mr-10">{{ (i+1) }}</span>
+							<strong>{{ element.starttime }} &nbsp;&nbsp;</strong>
+							<span
+							[ngStyle]="{'font-size': '0.8em'}">
+								{{ 
+									(element.prestationtitle.length>35) ?
+									(element.prestationtitle | slice:0:35)+'...':(element.prestationtitle) 						
+								}}
+							</span>
+						</div>
+			
+						<div
+						fxFlex="7"
+						fxLayoutAlign="end start" class="small">
+							<span class="member-name">{{ element.timelength }}&nbsp;m</span>
+						</div>
+			
+						<div 
+						class="whitetext"
+						fxFlex="3"
+						*ngIf="!cart.billkey"
+						fxLayoutAlign="start start">&nbsp;
+							<mat-select *ngIf="user.role == 'public'" [disabled]="disableSelect.value" 	 
+							  [(ngModel)]="time"
+							  (ngModelChange)="ChangeTimeInCart(cart,element,time)">
+									<mat-option *ngFor="let time of timelengths " [value]="time">
+									  {{ time }}
+									</mat-option>
+							</mat-select>
+
+							<mat-select *ngIf="user.role !== 'public'" 	 
+							  [(ngModel)]="time"
+							  (ngModelChange)="ChangeTimeInCart(cart,element,time)">
+									<mat-option *ngFor="let time of timelengths " [value]="time">
+									  {{ time }}
+									</mat-option>
+							</mat-select>
+						</div>
+			
+						<div
+						fxFlex="18"
+						fxLayoutAlign="end start">
+							<span class="member-name">{{ element.membername }}</span>
+						</div>
+			
+						<div 
+						class="whitetext"
+						fxFlex="3"
+						*ngIf="!cart.billkey"
+						fxLayoutAlign="start start">&nbsp;
+							<mat-select *ngIf="user.role !== 'admin'" [disabled]="disableSelect.value" 	 
+							  [(ngModel)]="member"
+							  (ngModelChange)="changeCoiffeur(element,member,cart,'prestation')">
+									<mat-option *ngFor="let member of members | async" [value]="member">
+									  {{ member.firstname }}
+									</mat-option>
+							</mat-select>
+
+							<mat-select *ngIf="user.role == 'admin'"	 
+							  [(ngModel)]="member"
+							  (ngModelChange)="changeCoiffeur(element,member,cart,'prestation')">
+									<mat-option *ngFor="let member of members | async" [value]="member">
+									  {{ member.firstname }}
+									</mat-option>
+							</mat-select>
+						</div> 
+			
+						<div
+						fxFlex="5"
+						fxLayoutAlign="end center">
+							<span class="qty">{{ element.quantity }}</span>
+						</div>
+						
+						<div
+						fxFlex="5"
+						fxLayoutAlign="start center">
+							<mat-icon *ngIf="cart.statut=='waiting' && user.role !== 'public'" (click)="removePrestaFromCart(element,cart)" class="cursor-pointer">clear</mat-icon>
+							<mat-icon *ngIf="cart.statut=='waiting' &&  user.clientkey==cart.clientkey" (click)="removePrestaFromCart(element,cart)" class="cursor-pointer">clear</mat-icon>
+						</div>
+			              
+					</div>
+
+			</div>
+					
+			
+					<div 
+						fxFlex="100"
+						[ngStyle]="
+								{
+									'font-size': '0.7em',
+									'color':'#CCC',
+									'font-weight':'300',
+									'margin-top': '10px',
+									'padding-top': '10px',
+									'letter-spacing': '2px',
+									'border-top': '1px dotted #ccc' 
+								}"
+						fxLayoutAlign="end end">
+						<div fxFlex="10"></div>
+						<div fxFlex="30" fxFlexAlign="end">TOTAL HT : {{ cart.totalHT }} €</div>
+						<div fxFlex="30" fxFlexAlign="end">TAX 20% : {{ cart.totalTAX }} € </div>		
+						<div fxFlex="30" fxFlexAlign="end">TOTAL TTC : 	{{ cart.totalTTC }} €</div>	
+						<!-- <div fxFlex="30" fxFlexAlign="end">TOTAL TTC : 	{{ cart.clientkey}}  €</div>		 -->
+					</div>
+			
+					<div fxFlex="100"
+						[ngStyle]="{'padding-top': '20px'}" *ngIf="cart.clientemail !== 'Indisponible'" >
+			
+						<button mat-fab type="button" tabindex="-1" color="black"
+							(click)="onNoClick()">
+							<mat-icon>close</mat-icon>
+					  </button>
+			
+						<button mat-fab type="button" tabindex="-1" color="warn"
+							*ngIf="cart.statut=='waiting' && user.role == 'admin' "
+						  matTooltip="Supprimer le rendez vous" matTooltipPosition="after"																				
+							(click)="justClicked=false;deleteCart(cart,cart.prestas)">
+							<mat-icon>delete</mat-icon>
+						</button>
+						
+						<button mat-fab type="button" tabindex="-1" color="warn"
+							*ngIf="cart.statut=='waiting' &&  user.clientkey==cart.clientkey"
+						  matTooltip="Supprimer le rendez vous"  matTooltipPosition="after"																				
+							(click)="justClicked=false;deleteCart(cart,cart.prestas)">
+							<mat-icon>delete</mat-icon>
+					    </button>
+			
+						<button  mat-fab type="button" tabindex="2" color="green"
+							*ngIf="cart.statut=='waiting' && user.role !== 'public'" 
+						  matTooltip="Début du rendez vous" matTooltipPosition="after"																
+							(click)="justClicked=false;doingCart(cart,'ongoing')">
+							<mat-icon>check</mat-icon>
+					  </button>
+			
+						<button mat-fab type="button" tabindex="2" color="warn"
+							*ngIf="cart.statut=='ongoing' && user.role !== 'public'"
+						  matTooltip="Effectuer le paiement" matTooltipPosition="after"												
+							(click)="justClicked=false;doingCart(cart,'done')"> 
+							<mat-icon>payment</mat-icon>
+					  </button>
+			
+						<button mat-fab type="button" tabindex="2" color="black"
+						  matTooltip="Voir la facture" matTooltipPosition="after"	
+					  [routerLink]="['./../facturationcart', cart.$key]"
+					  (click)="onNoClick()"			  						
+							*ngIf="cart.statut=='paid' && user.role !== 'public'">
+							<mat-icon>receipt</mat-icon>
+					  </button>
+			 
+					 </div>
+
+					 <div fxFlex="100" *ngIf="cart.clientemail == 'Indisponible'" 
+						[ngStyle]="{'padding-top': '20px'}">
+			
+						<button mat-fab type="button" tabindex="-1" color="black"
+							(click)="onNoClick()">
+							<mat-icon>close</mat-icon>
+						</button>
+						
+						<button mat-fab type="button" tabindex="-1" color="warn"
+							*ngIf="cart.statut=='waiting' && user.role == 'admin'"
+							matTooltip="Supprimer le rendez vous" matTooltipPosition="after"																				
+							(click)="justClicked=false;deleteCart(cart,cart.prestas)">
+							<mat-icon>delete</mat-icon>
+						</button>
+			 
+					 </div>
+				</div>
+			</div>
+
+</div>

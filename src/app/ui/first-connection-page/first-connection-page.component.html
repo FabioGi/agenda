@@ -1,0 +1,13 @@
+<div class="logo-dl-bordeaux-tb" *ngIf="auth.user | async as user" >
+    <mat-card class="example-card">
+        <mat-card-content>
+          <h2>
+            <strong>Welcome  to david lucas hair salon. Please select your role to finalize your registration.</strong>
+          </h2>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button (click)="openClientDialog()">CUSTOMER</button>
+          <button mat-raised-button (click)="openMemberDialog()">HAIRDRESSER</button>
+        </mat-card-actions>
+      </mat-card>
+</div>

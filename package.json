@@ -28,7 +28,7 @@
     "@nicky-lenaers/ngx-scroll-tracker": "^0.2.2",
     "angular-scroll": "^1.0.2",
     "angularfire2": "^5.0.0-rc.11",
-    "bootstrap": "^4.1.1",
+    "bootstrap": "^4.3.1",
     "core-js": "^2.5.7",
     "firebase": "^5.2.0",
     "flag-icon-css": "^3.0.0",
